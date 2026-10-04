@@ -20,11 +20,11 @@ jobs:
         run: dotnet workload install ios
 
       - name: Restore Dependencies
-        run: dotnet restore -p:TargetFramework=net9.0-ios OpenUtau.Mobile/OpenUtau.Mobile.csproj
+        run: dotnet restore -p:TargetFramework=net9.0-ios OpenUtauMobile/OpenUtauMobile.csproj
 
       - name: Publish IPA
         run: |
-          dotnet publish OpenUtau.Mobile/OpenUtau.Mobile.csproj \
+          dotnet publish OpenUtauMobile/OpenUtauMobile.csproj \
             -f net9.0-ios \
             -r ios-arm64 \
             -c Release \
@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: OpenUtauMobile-iOS-IPA
-          path: OpenUtau.Mobile/bin/Release/net9.0-ios/ios-arm64/publish/*.ipa
+          path: OpenUtauMobile/bin/Release/net9.0-ios/ios-arm64/publish/*.ipa
