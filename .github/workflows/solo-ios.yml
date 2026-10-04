@@ -11,12 +11,19 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Pin SDK to .NET 9
+        run: |
+          echo '{"sdk":{"version":"9.0.100","rollForward":"latestMinor"}}' > global.json
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Force Workload Bypass and Build
+      - name: Install iOS Workload
+        run: dotnet workload install ios
+
+      - name: Publish IPA
         run: |
           dotnet publish OpenUtauMobile/OpenUtauMobile.csproj \
             -f net9.0-ios \
@@ -25,8 +32,7 @@ jobs:
             -p:ArchiveOnBuild=true \
             -p:SigningIdentity="-" \
             -p:CodesignProvision="-" \
-            -p:MtouchExtraArgs="--nowarn:2346" \
-            -p:SkipWorkloadValidation=true
+            -p:MtouchExtraArgs="--nowarn:2346"
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
