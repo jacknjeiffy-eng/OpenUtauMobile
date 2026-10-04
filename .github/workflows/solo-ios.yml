@@ -11,17 +11,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Pin SDK to .NET 9
-        run: |
-          echo '{"sdk":{"version":"9.0.100","rollForward":"latestMinor"}}' > global.json
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Install iOS Workload
-        run: dotnet workload install ios
+      - name: Install All Required Workloads
+        run: |
+          dotnet workload install ios android maui
 
       - name: Publish IPA
         run: |
