@@ -1,0 +1,39 @@
+name: Build Solo iOS IPA
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install iOS Workload
+        run: dotnet workload install ios
+
+      - name: Restore Dependencies
+        run: dotnet restore -p:TargetFramework=net9.0-ios OpenUtau/OpenUtau.csproj
+
+      - name: Publish IPA
+        run: |
+          dotnet publish OpenUtau/OpenUtau.csproj \
+            -f net9.0-ios \
+            -r ios-arm64 \
+            -c Release \
+            -p:ArchiveOnBuild=true \
+            -p:SigningIdentity="-" \
+            -p:CodesignProvision="-"
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenUtauMobile-iOS-IPA
+          path: OpenUtau/bin/Release/net9.0-ios/ios-arm64/publish/*.ipa
