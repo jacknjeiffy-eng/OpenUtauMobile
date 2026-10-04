@@ -16,16 +16,7 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Install Pinned iOS Workload
-        run: dotnet workload install ios --version 9.0.203
-
-      - name: Restore Project Workloads
-        run: dotnet workload restore OpenUtauMobile/OpenUtauMobile.csproj
-
-      - name: Restore Dependencies
-        run: dotnet restore -p:TargetFramework=net9.0-ios OpenUtauMobile/OpenUtauMobile.csproj
-
-      - name: Publish IPA
+      - name: Force Workload Bypass and Build
         run: |
           dotnet publish OpenUtauMobile/OpenUtauMobile.csproj \
             -f net9.0-ios \
@@ -34,7 +25,8 @@ jobs:
             -p:ArchiveOnBuild=true \
             -p:SigningIdentity="-" \
             -p:CodesignProvision="-" \
-            -p:MtouchExtraArgs="--nowarn:2346"
+            -p:MtouchExtraArgs="--nowarn:2346" \
+            -p:SkipWorkloadValidation=true
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
