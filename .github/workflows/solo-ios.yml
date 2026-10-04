@@ -19,6 +19,9 @@ jobs:
       - name: Install iOS Workload
         run: dotnet workload install ios
 
+      - name: Restore Project Workloads
+        run: dotnet workload restore OpenUtauMobile/OpenUtauMobile.csproj
+
       - name: Restore Dependencies
         run: dotnet restore -p:TargetFramework=net9.0-ios OpenUtauMobile/OpenUtauMobile.csproj
 
